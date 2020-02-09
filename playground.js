@@ -1,0 +1,1 @@
+console.log('Bob Ross'.replace(/.*\s(\w+)$/, '$1'))
