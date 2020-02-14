@@ -1,35 +1,29 @@
-function convertToRoman(num, carried = []) {
+function convertToRoman(num, carried = '') { 
+    let bank = [ 'M', 'D', 'C', 'L', 'X', 'V', 'I' ]
+    let startingAt = 0
 
-    let storage = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+    function test(dig){
 
-    let bank = Object.entries(storage)
-        .slice()
-        .sort((a, b) => b[1] - a[1]);
+        let place = startingAt
+        startingAt = startingAt + 2
+        let ten = bank[place]
+        let five = bank[place + 1]
+        let one = bank[place + 2]
 
-    let firstDivisable = bank.find(x => num - x[1] >= 0);
-    let firstIndex = bank.indexOf(firstDivisable)
-    let [key, val] = firstDivisable
-    let [smallerKey, smallerVal] = bank[firstIndex + 1]
-    let [largerKey, largerVal] = bank[firstIndex - 1]
- 
-    if (num / val < 4) {
-        if ((num % val) / smallerVal > 3){
-            carried = carried.concat(largerKey, smallerKey.repeat((largerVal % val) % smallerVal))
-        } else if ((num % val) % key[smallerVal] <= key[smallerVal] * 3){
-        let mult = Math.floor(num / val);
-        console.log(key.repeat(mult));
-        carried = carried.concat(
-            key.repeat(Math.floor(num / val))
-        );
-        num = num - val * mult;
+        if (dig >= 5){
+            return dig == 9 ? one.concat(ten) : five.concat(one.repeat(dig - 5)) 
+        } else if (dig < 5){
+            return dig == 4 ? one.concat(five) : one.repeat(dig)
         } else {
-        let index = key.indexOf(firstDivisable);
-        carried = carried.concat(key[index][0].concat(key[index - 1][0]));
-        num = num - (key[index - 1][1] - key[index][1]);
-    }
-    if (num > 0) {
-        return convertToRoman(num, carried);
-    } else return carried.join("");
-}}
+            console.log("func test() error")
+            return -1
+        }
 
-console.log("answer ",convertToRoman(9));
+    }
+
+  let arr = JSON.stringify(num).padStart(4, '0').split('').map(x => parseInt(x))
+  let subArr = arr.slice(1)
+  return ['M'.repeat(arr[0])].concat(subArr.map(x => test(x))).join("")
+}
+
+console.log("answer ",convertToRoman(68));
